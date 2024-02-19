@@ -10,7 +10,7 @@ EXPOSE ${DEBRIS_PORT}
 ENV POETRY_VERSION=1.7.1
 
 RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev
-RUB pip install "poetry==$POETRY_VERSION"
+RUN pip install "poetry==$POETRY_VERSION"
 
 COPY ./ /
 
