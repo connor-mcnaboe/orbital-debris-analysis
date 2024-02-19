@@ -1,0 +1,6 @@
+version: '3.8'
+services:
+  beanstalk-fast-api:
+    image: "cmcnaboe/beanstalk-fast-api"
+    ports:
+      - "80:8080"
