@@ -1,6 +1,6 @@
 version: '3.8'
 services:
   beanstalk-fast-api:
-    image: "cmcnaboe/beanstalk-fast-api"
+    image: "ce1492/orbital-debris-threat"
     ports:
       - "80:8080"
