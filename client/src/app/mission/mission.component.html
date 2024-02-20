@@ -1,0 +1,13 @@
+<form [formGroup]="missionForm" class="mission-form">
+  <mat-form-field>
+    <input matInput type="number" formControlName="apogee" placeholder="Apogee">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="number" formControlName="perigee" placeholder="Perigee">
+  </mat-form-field>
+    <mat-form-field>
+    <input matInput type="number" formControlName="threat_tolerance_km" placeholder="Threat Tolerance">
+  </mat-form-field>
+  <button mat-button (click)="submitMission()">Submit</button>
+</form>
