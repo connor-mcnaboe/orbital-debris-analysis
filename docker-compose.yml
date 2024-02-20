@@ -5,4 +5,4 @@ services:
   oda-ui:
     image: "ce1492/oda-ui"
     ports:
-      - "80:8000"
+      - "80:80"
