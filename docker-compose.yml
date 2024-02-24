@@ -6,5 +6,7 @@ services:
       - "8080:8080"
   oda-ui:
     image: "ce1492/oda-ui"
+    depends_on:
+      - beanstalk-fast-api
     ports:
       - "80:80"

@@ -11,6 +11,7 @@ origins = [
     "http://localhost",
     "http://localhost:80",
     "http://localhost:4200",
+    "http://orbital-debris-env.eba-pdettcmd.us-east-2.elasticbeanstalk.com/",
 ]
 
 app.add_middleware(
