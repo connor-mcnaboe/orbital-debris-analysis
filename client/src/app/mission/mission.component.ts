@@ -10,6 +10,7 @@ import {MissionDataShareService, ThreatReport} from "../services/mission-data-sh
 })
 export class MissionComponent implements OnInit {
   missionForm: FormGroup;
+  query: boolean;
 
   constructor(private missionService: MissionService,
               private formBuilder: FormBuilder,
@@ -28,9 +29,11 @@ export class MissionComponent implements OnInit {
   }
 
   submitMission(): void {
+    this.query = true;
     this.missionService.postMissionDto(this.missionForm.value)
       .subscribe((threatReport: ThreatReport)=> {
         this.missionDataShare.update_mission(threatReport)
+        this.query = false
       })
   }
 }

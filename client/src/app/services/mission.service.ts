@@ -11,7 +11,7 @@ export class MissionService {
 
   postMissionDto(missionDto: MissionDto): Observable<any> {
     return this.httpClient.post(
-          `localhost:8000/threat-report/`,
+          `http://localhost:8000/threat-report/`,
           missionDto
         )
   }

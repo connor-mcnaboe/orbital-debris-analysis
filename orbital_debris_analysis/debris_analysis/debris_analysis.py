@@ -4,8 +4,10 @@ import pandas as pd
 from pandas import DataFrame
 from datetime import datetime
 
+from orbital_debris_analysis.csv_parser.csv_parser import csv_to_pandas
 from orbital_debris_analysis.models.mission import Mission
 from orbital_debris_analysis.models.object_type_enum import ObjectTypeEnum
+from orbital_debris_analysis.models.status_enum import StatusEnum
 from orbital_debris_analysis.models.threat_report import ThreatReport
 
 # Minimum Columns needed for Analysis #
@@ -15,19 +17,31 @@ DECAY = "DECAY"
 APOGEE = "APOGEE"
 PERIGEE = "PERIGEE"
 
+# Minimum Columns needed for status lookup
+STATUS = "Status"
+
 
 def extract_analysis_data(data_frame: DataFrame):
     return data_frame[[INTLDES, OBJECT_TYPE, DECAY, APOGEE, PERIGEE]]
 
 
-def calculate_threat_model(data_frame: DataFrame, mission: Mission) -> ThreatReport:
+def extract_status_data(data_frame: DataFrame):
+    return data_frame[[INTLDES, STATUS]]
+
+
+def calculate_threat_model(mission: Mission) -> ThreatReport:
+    full_data_frame = csv_to_pandas("./orbital_debris_analysis/data/SATCAT.csv")
+    full_status_data_frame = csv_to_pandas("./orbital_debris_analysis/data/active_data_sheet.csv")
+
+    extracted_data_frame = extract_analysis_data(data_frame=full_data_frame)
+    extracted_status_data_frame = extract_status_data(data_frame=full_status_data_frame)
+
     threat_report = ThreatReport(total_threat_count=0,
                                  rocket_body_threat_count=0,
                                  debris_threat_count=0,
                                  inactive_sat_threat_count=0,
                                  active_sat_threat_count=0)
-
-    for index, row in data_frame.iterrows():
+    for index, row in extracted_data_frame.iterrows():
         if is_orbital(row):
             if is_in_mission_vicinity(debris_apogee=row[APOGEE], debris_perigee=row[PERIGEE], mission=mission):
                 # Increment overall threat count
@@ -39,8 +53,12 @@ def calculate_threat_model(data_frame: DataFrame, mission: Mission) -> ThreatRep
                     case ObjectTypeEnum.ROCKET_BODY.value:
                         threat_report.rocket_body_threat_count += 1
                     case ObjectTypeEnum.PAYLOAD.value:
-                        # TODO: Parse .sd file and lookup satellite active vs. inactive
-                        pass
+                        for status_index, status_row in extracted_status_data_frame.iterrows():
+                            if status_row[INTLDES] == row[INTLDES]:
+                                if status_row[STATUS] == StatusEnum.ACTIVE.value:
+                                    threat_report.active_sat_threat_count += 1
+                                elif status_row[STATUS] == StatusEnum.INACTIVE.value:
+                                    threat_report.inactive_sat_threat_count += 1
                     case ObjectTypeEnum.UNKNOWN.value:
                         # TODO: Determine how to treat unknown bodies
                         pass
@@ -49,10 +67,6 @@ def calculate_threat_model(data_frame: DataFrame, mission: Mission) -> ThreatRep
 
 def is_orbital(row) -> bool:
     return isinstance(row[DECAY], float) and math.isnan(row[DECAY])
-
-
-# return ((row[DECAY] is not None or not math.isnan(row[DECAY])) and
-#         datetime.strptime(str(row[DECAY]), "%Y-%m-%d").date() < datetime.now().date())
 
 
 def is_in_mission_vicinity(debris_apogee: int, debris_perigee: int, mission: Mission) -> bool:
