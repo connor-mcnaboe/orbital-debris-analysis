@@ -2,6 +2,8 @@ version: '3.8'
 services:
   beanstalk-fast-api:
     image: "ce1492/orbital-debris-threat"
+    ports:
+      - "8080:8080"
   oda-ui:
     image: "ce1492/oda-ui"
     ports:
