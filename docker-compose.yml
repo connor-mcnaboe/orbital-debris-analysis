@@ -4,9 +4,20 @@ services:
     image: "ce1492/orbital-debris-threat"
     ports:
       - "8080:80"
+    networks:
+      main:
+        aliases:
+          - web
   oda-ui:
     image: "ce1492/oda-ui"
     depends_on:
       - beanstalk-fast-api
     ports:
       - "80:80"
+    networks:
+      main:
+        aliases:
+          - nginx
+
+networks:
+  main:
