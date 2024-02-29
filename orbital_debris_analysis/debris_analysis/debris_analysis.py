@@ -79,10 +79,7 @@ def is_in_mission_vicinity(debris_apogee: int, debris_perigee: int, mission: Mis
     mission_perigee_upper_tol = mission.perigee + mission.threat_tolerance_km
     mission_perigee_lower_tol = mission.perigee - mission.threat_tolerance_km
 
-    if mission_apogee_upper_tol > debris_apogee > mission_apogee_lower_tol:
-        return True
-
-    if mission_perigee_upper_tol > debris_perigee > mission_perigee_lower_tol:
+    if debris_apogee >= mission_apogee_lower_tol and debris_perigee <= mission_perigee_lower_tol:
         return True
 
     return False

@@ -6,6 +6,6 @@ from orbital_debris_analysis.debris_analysis.debris_analysis import calculate_th
 router = APIRouter()
 
 
-@router.post("/threat-report/")
+@router.post("/api/threat-report/")
 async def read_threat_report(mission: Mission) -> ThreatReport:
     return calculate_threat_model(mission=mission)
